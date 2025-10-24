@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 import json
 
-DATABASE = 'database.db'
+DATABASE = '/tmp/database.db'
 
 def init_db():
     """Inicializa o banco de dados"""

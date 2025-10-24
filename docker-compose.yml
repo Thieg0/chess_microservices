@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  #API Gateway
+  # API Gateway
   api-gateway:
     build: ./api-gateway
     container_name: chess-api-gateway
@@ -24,8 +24,6 @@ services:
     container_name: chess-auth-service
     ports:
       - "8001:8001"
-    volumes:
-      - ./services/auth-service:/database.db:/app/database.db
     networks:
       - chess-network
 
@@ -35,41 +33,39 @@ services:
     container_name: chess-game-service
     ports:
       - "8003:8003"
-    volumes:
-      - ./services/game-service:/database.db:/app/database.db
     networks:
       - chess-network
 
   # AI Service
-  ai-service:
-    build: ./services/ai-service
-    container_name: chess-ai-service
-    ports:
-      - "8004:8004"
-    networks:
-      - chess-network
+  #ai-service:
+  #  build: ./services/ai-service
+  #  container_name: chess-ai-service
+  #  ports:
+  #    - "8004:8004"
+  #  networks:
+  #    - chess-network
 
   # History Service
-  history-service:
-    build: ./services/history-service
-    container_name: chess-history-service
-    ports:
-      - "8005:8005"
-    volumes:
-      - ./services/history-service:/database.db:/app/database.db
-    networks:
-      - chess-network
+  #history-service:
+  #  build: ./services/history-service
+  #  container_name: chess-history-service
+  #  ports:
+  #    - "8005:8005"
+  #  volumes:
+  #    - ./services/history-service:/database.db:/app/database.db
+  #  networks:
+  #    - chess-network
 
   # Frontend React
-  frontend:
-    build: ./frontend
-    container_name: chess-frontend
-    ports:
-      - "3000:3000"
-    environment:
-      - REACT_APP_API_GATEWAY_URL=http://localhost:8000
-    networks:
-      - chess-network
+  #frontend:
+  #  build: ./frontend
+  #  container_name: chess-frontend
+  #  ports:
+  #    - "3000:3000"
+  #  environment:
+  #    - REACT_APP_API_GATEWAY_URL=http://localhost:8000
+  #  networks:
+  #    - chess-network
 
 networks:
   chess-network:

@@ -2,7 +2,7 @@ import sqlite3
 import bcrypt
 from datetime import datetime
 
-DATABASE = "database.db"
+DATABASE = "/tmp/database.db"
 
 def init_db():
     """Inicializa o banco de dados"""
