@@ -104,6 +104,9 @@ def make_move(game_id):
     }
     """
     data = request.json
+
+    print(f"🎯 Recebido movimento: {data}")  # ADICIONE
+    print(f"🎲 Game ID: {game_id}")  # ADICIONE
     
     if not data or not data.get('from') or not data.get('to'):
         return jsonify({'error': 'from and to squares are required'}), 400
@@ -111,6 +114,8 @@ def make_move(game_id):
     from_square = data['from']
     to_square = data['to']
     promotion = data.get('promotion')
+
+    print(f"📍 From: {from_square}, To: {to_square}, Promotion: {promotion}")  # ADICIONE
     
     # Busca o jogo
     if game_id not in active_games:
