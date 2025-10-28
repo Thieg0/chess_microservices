@@ -129,4 +129,27 @@ export const getValidMoves = async (gameId, square = null) => {
   }
 };
 
+export const getAIMove = async (fen, difficulty = 'medium') => {
+  try {
+    const response = await api.post('/ai/move', {
+      fen,
+      difficulty,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to get AI move' };
+  }
+};
+
+export const getHint = async (fen) => {
+  try {
+    const response = await api.post('/ai/hint', {
+      fen,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to get hint' };
+  }
+};
+
 export default api;

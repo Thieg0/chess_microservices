@@ -10,6 +10,9 @@ function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userId, setUserId] = useState(null);
+  const [gameMode, setGameMode] = useState("local");
+  const [aiDifficulty, setAiDifficulty] = useState("medium");
+  const [showModeSelection, setShowModeSelection] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   
@@ -74,8 +77,15 @@ function App() {
   };
 
   const handleNewGame = () => {
-    setGameKey((prev) => prev + 1);
+    setShowModeSelection(true);
   };
+
+  const startNewGame = (mode, difficullty = 'medium') => {
+    setGameMode(mode);
+    setAiDifficulty(difficullty);
+    setGameKey((prevKey) => prevKey + 1); // Forçar re-montagem do ChessBoard
+    setShowModeSelection(false);
+  }
 
   const handleFlipBoard = () => {
     setBoardOrientation((prev) => (prev === "white" ? "black" : "white"));
@@ -168,6 +178,38 @@ function App() {
   return (
     <div className="app-container">
       <h1 className="title">♟️ Jogo de Xadrez — {playerName}</h1>
+      {/* Modal de seleção de modo */}
+      {showModeSelection && (
+      <div className="modal-overlay">
+        <div className="modal">
+          <h2>Escolha o Modo de Jogo</h2>
+          
+          <button onClick={() => startNewGame('local')}>
+            👥 2 Jogadores Local
+          </button>
+          
+          <div className="ai-options">
+            <h3>Jogar contra IA</h3>
+            <button onClick={() => startNewGame('ai', 'easy')}>
+              🤖 IA Fácil
+            </button>
+            <button onClick={() => startNewGame('ai', 'medium')}>
+              🤖 IA Médio
+            </button>
+            <button onClick={() => startNewGame('ai', 'hard')}>
+              🤖 IA Difícil
+            </button>
+          </div>
+          
+          <button 
+            onClick={() => setShowModeSelection(false)}
+            style={{backgroundColor: '#999', marginTop: '20px'}}
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    )}
 
       <div className="content">
         <div className="board-section">
@@ -176,11 +218,14 @@ function App() {
             ref={boardRef}
             boardOrientation={boardOrientation}
             userId={userId}
+            gameMode={gameMode}
+            aiDifficulty={aiDifficulty}
           />
         </div>
 
         <div className="menu-section">
           <h2>Menu</h2>
+          <p>Modo: {gameMode == 'local' ? '👥 Local' : `🤖 IA (${aiDifficulty})`}</p>
           <button onClick={handleNewGame}>Novo Jogo</button>
           <button onClick={handleUndoMove}>Desfazer Jogada</button>
           <button onClick={handleFlipBoard}>Mudar Cor das Peças</button>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef, useRef } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import { createGame, makeMove, getGame } from "./services/api";
+import { createGame, makeMove, getGame, getAIMove} from "./services/api";
 
-const ChessBoard = forwardRef(({ boardOrientation, userId }, ref) => {
+const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', aiDifficulty = 'medium' }, ref) => {
   const [game, setGame] = useState(new Chess());
   const [gameId, setGameId] = useState(null);
   const [currentTurn, setCurrentTurn] = useState("white");
@@ -11,6 +11,7 @@ const ChessBoard = forwardRef(({ boardOrientation, userId }, ref) => {
   const [winner, setWinner] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [waitingForAI, setWaitingForAI] = useState(false);
   const gameCreated = useRef(false);
 
   // Criar nova partida quando o componente monta
@@ -50,12 +51,87 @@ const ChessBoard = forwardRef(({ boardOrientation, userId }, ref) => {
       setLoading(false);
     }
   };
+  
+  const makeAIMove = async () => {
+    if (gameMode !== 'ai' || currentTurn !== 'black') {
+      return;
+    }
 
+    setWaitingForAI(true);
+    setMessage("🤖 IA está pensando...");
+
+    try {
+      const currentFen = game.fen();
+    
+      console.log("Solicitando movimento da IA...");
+      const aiResponse = await getAIMove(currentFen, aiDifficulty);
+      
+      if (!aiResponse.success) {
+        throw new Error("IA não retornou movimento válido");
+      }
+
+      const aiMove = aiResponse.move;
+      console.log("IA sugeriu:", aiMove);
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const data = await makeMove(
+        gameId, 
+        aiMove.from, 
+        aiMove.to, 
+        aiMove.promotion
+      );
+
+      const updatedGame = new Chess(data.board_state);
+      setGame(updatedGame);
+      setCurrentTurn(data.current_turn);
+      setGameStatus(data.status);
+      setWinner(data.winner);
+
+      if (data.is_checkmate) {
+        setMessage(`Xeque-mate! ${data.winner === 'white' ? 'Você venceu!' : 'IA venceu!'}`);
+      } else if (data.is_check) {
+        setMessage("Xeque! Seu turno.");
+      } else {
+        setMessage("Seu turno.");
+      }
+
+    } catch (error) {
+      console.error("Erro na jogada da IA:", error);
+      setMessage("Erro: IA não conseguiu jogar");
+    } finally {
+      setWaitingForAI(false);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      gameMode === 'ai' && 
+      currentTurn === 'black' && 
+      gameStatus === 'active' && 
+      !waitingForAI &&
+      gameId
+    ) {
+      const timer = setTimeout(() => {
+        makeAIMove();
+      }, 800);
+
+      return () => clearTimeout(timer);
+    }
+  }, [currentTurn, gameMode, gameStatus, waitingForAI, gameId]);
+
+  
+  
 const onDrop = async (sourceSquare, targetSquare) => {
   console.log("🎯 Movimento:", sourceSquare, "->", targetSquare);
   
-  if (loading || gameStatus !== "active") {
+  if (loading || (gameStatus !== "active" && gameStatus !== "check") || waitingForAI) {
     console.log("❌ Bloqueado - loading ou jogo não ativo");
+    return false;
+  }
+
+  if (gameMode === 'ai' && currentTurn === 'black') {
+    setMessage("Aguarde o turno da IA");
     return false;
   }
 
@@ -139,7 +215,7 @@ const onDrop = async (sourceSquare, targetSquare) => {
         position={game.fen()}
         onPieceDrop={onDrop}
         boardOrientation={boardOrientation}
-        arePiecesDraggable={!loading && gameStatus === 'active'}
+        arePiecesDraggable={true}
         animationDuration={150}
       />
 
