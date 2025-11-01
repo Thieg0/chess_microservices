@@ -593,35 +593,7 @@ REACT_APP_API_URL=http://localhost:8000
 
 **Disciplina:** Engenharia de Software
 
-**Ano:** 2024-2025
+**Ano:** 2025.2
 
 ---
 
-## 📝 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-
-## 🙏 Agradecimentos
-
-- [python-chess](https://github.com/niklasf/python-chess) - Biblioteca de xadrez para Python
-- [Stockfish](https://stockfishchess.org/) - Engine de xadrez open-source
-- [react-chessboard](https://github.com/Clariity/react-chessboard) - Componente de tabuleiro para React
-- [Flask](https://flask.palletsprojects.com/) - Framework web Python
-- [Docker](https://www.docker.com/) - Plataforma de containerização
-
----
-
-## 📞 Contato
-
-Para dúvidas ou sugestões:
-
-- 📧 Email: thiego.santos@ic.ufal.br
-- 🐛 Issues: [GitHub Issues](https://github.com/Thieg0/chess_microservices/issues)
-
----
-
-<p align="center">
-  Desenvolvido com ♟️ por estudantes da UFAL
-</p>
