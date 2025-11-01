@@ -28,6 +28,31 @@ Sistema de jogo de xadrez online desenvolvido com arquitetura de microserviços,
 
 ---
 
+## 🎬 Demonstração
+
+### Vídeo do Sistema Funcionando
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=SmCs-MtwpBM&t=6s">
+    <img src="https://img.youtube.com/vi/SmCs-MtwpBM&t=6s/maxresdefault.jpg" alt="Vídeo Demonstração" width="600"/>
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=SEU_VIDEO_ID">
+    <img src="https://img.shields.io/badge/▶️-Assistir%20no%20YouTube-red?style=for-the-badge&logo=youtube" alt="Assistir no YouTube"/>
+  </a>
+</p>
+
+**Duração:** 5 minutos  
+**Conteúdo:**
+- ✅ Criação de conta e login
+- ✅ Partida vs outro jogador
+- ✅ Partida vs IA (diferentes dificuldades)
+- ✅ Demonstração de xeque-mate
+
+---
+
 ## 🎯 Sobre o Projeto
 
 Este projeto implementa um jogo de xadrez completo seguindo os princípios de arquitetura de microserviços. O sistema permite que usuários:
