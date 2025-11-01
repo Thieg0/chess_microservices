@@ -33,7 +33,7 @@ Sistema de jogo de xadrez online desenvolvido com arquitetura de microserviços,
 ### Vídeo do Sistema Funcionando
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=SmCs-MtwpBM&t=6s">
+  <a href="https://www.youtube.com/watch?v=SmCs-MtwpBM&t=6s](https://www.youtube.com/watch?v=SmCs-MtwpBM&t=6s">
     <img src="https://img.youtube.com/vi/SmCs-MtwpBM&t=6s/maxresdefault.jpg" alt="Vídeo Demonstração" width="600"/>
   </a>
 </p>
