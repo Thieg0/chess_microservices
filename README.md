@@ -28,28 +28,25 @@ Sistema de jogo de xadrez online desenvolvido com arquitetura de microserviços,
 
 ---
 
-## 🎬 Demonstração
-
-### Vídeo do Sistema Funcionando
+## 🎬 Demonstração em Vídeo
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=SmCs-MtwpBM&t=6s](https://www.youtube.com/watch?v=SmCs-MtwpBM&t=6s">
-    <img src="https://img.youtube.com/vi/SmCs-MtwpBM&t=6s/maxresdefault.jpg" alt="Vídeo Demonstração" width="600"/>
+  <a href="https://youtu.be/SmCs-MtwpBM">
+    <img src="https://img.youtube.com/vi/SmCs-MtwpBM/maxresdefault.jpg" alt="Vídeo Demonstração" width="700"/>
   </a>
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=SEU_VIDEO_ID">
-    <img src="https://img.shields.io/badge/▶️-Assistir%20no%20YouTube-red?style=for-the-badge&logo=youtube" alt="Assistir no YouTube"/>
+  <a href="https://youtu.be/SmCs-MtwpBM">
+    <img src="https://img.shields.io/badge/▶️_Assistir_no_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Assistir no YouTube"/>
   </a>
 </p>
 
-**Duração:** 5 minutos  
-**Conteúdo:**
-- ✅ Criação de conta e login
-- ✅ Partida vs outro jogador
-- ✅ Partida vs IA (diferentes dificuldades)
-- ✅ Demonstração de xeque-mate
+**O que você verá no vídeo:**
+- ✅ Sistema completo funcionando
+- ✅ Demonstração de autenticação
+- ✅ Partidas vs jogador e vs IA
+- ✅ Xeque-mate e validações
 
 ---
 
