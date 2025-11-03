@@ -9,7 +9,11 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port, debug=False)  # debug=False para produção
 
 app = Flask(__name__)
-CORS(app)  # Permite requisições do frontend
+CORS(app, origins=[
+    "https://chess-microservices.vercel.app",  # Frontend deployado
+    "http://localhost:3000"                     # Frontend local
+    "https://*.onrender.com" # Permitir chamadas entre serviços Render
+])  
 
 # Inicializa o banco quando o app inicia
 models.init_db()
