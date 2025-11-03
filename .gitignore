@@ -6,11 +6,12 @@ __pycache__/
 .Python
 env/
 venv/
+ENV/
 *.egg-info/
 dist/
 build/
 
-# Database
+# Database files (arquivos locais de desenvolvimento)
 *.db
 *.sqlite3
 
@@ -22,12 +23,44 @@ build/
 .idea/
 *.swp
 *.swo
+.DS_Store
+Thumbs.db
 
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Environment variables
-.env
+# Environment variables - APENAS arquivos .local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Node modules (para o frontend depois)
+# Node modules
 node_modules/
+
+# React build output (gerado pelo npm run build)
+frontend/build/
+
+# Coverage reports
+coverage/
+*.coverage
+.coverage.*
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Pytest
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
