@@ -5,11 +5,13 @@ import auth
 import os
 
 app = Flask(__name__)
+
 CORS(app, origins=[
-    "https://chess-microservices.vercel.app",  # Frontend deployado
-    "http://localhost:3000",                     # Frontend local
-    "https://*.onrender.com" # Permitir chamadas entre serviços Render
-])  
+    "https://chess-microservices.vercel.app",
+    "http://localhost:3000",
+    "https://*.onrender.com",   # O Gateway (no Render) chamará este serviço
+    "https://*.vercel.app"      # Cobertura extra para o frontend
+])
 
 # Inicializa o banco quando o app inicia
 models.init_db()
