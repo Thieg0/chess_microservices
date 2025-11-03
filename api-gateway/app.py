@@ -3,11 +3,6 @@ from flask_cors import CORS
 import gateway
 import os
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8000))
-    print(f"🚀 Starting API Gateway on port {port}...")
-    app.run(host='0.0.0.0', port=port, debug=False) # debug=False para produção
-
 app = Flask(__name__)
 
 CORS(app, origins=[
@@ -42,5 +37,6 @@ def root():
     }, 200
 
 if __name__ == '__main__':
-    print("🚀 Starting API Gateway on port 8000...")
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    port = int(os.environ.get('PORT', 8000))
+    print(f"🚀 Starting API Gateway on port {port}...")
+    app.run(host='0.0.0.0', port=port, debug=False) # debug=False para produção

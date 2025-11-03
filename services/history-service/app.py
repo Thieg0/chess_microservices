@@ -4,10 +4,6 @@ import models
 from datetime import datetime
 import os
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8005))
-    app.run(host='0.0.0', port=port, debug=False)  # debug=False para produção
-
 app = Flask(__name__)
 
 CORS(app, origins=[
@@ -171,5 +167,5 @@ def get_recent_games():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    print("📜 Starting History Service on port 8005...")
-    app.run(host='0.0.0.0', port=8005, debug=True)
+    port = int(os.environ.get('PORT', 8005))
+    app.run(host='0.0.0', port=port, debug=False)  # debug=False para produção

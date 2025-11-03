@@ -4,10 +4,6 @@ import models
 import auth
 import os
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8001))
-    app.run(host='0.0.0.0', port=port, debug=False)  # debug=False para produção
-
 app = Flask(__name__)
 CORS(app, origins=[
     "https://chess-microservices.vercel.app",  # Frontend deployado
@@ -123,4 +119,5 @@ def get_user(current_user_id, user_id):
     }), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8001, debug=True)
+    port = int(os.environ.get('PORT', 8001))
+    app.run(host='0.0.0.0', port=port, debug=False)  # debug=False para produção

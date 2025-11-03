@@ -3,10 +3,6 @@ from flask_cors import CORS
 import ai_engine
 import os
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8004))
-    app.run(host='0.0.0.0', port=port, debug=False)  # debug=False para produção
-
 app = Flask(__name__)
 
 CORS(app, origins=[
@@ -101,13 +97,5 @@ def get_hint():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    print("🤖 Starting AI Service on port 8004...")
-    print("Initializing Stockfish engine...")
-    
-    if not ai_engine.is_stockfish_available():
-        print("⚠️  WARNING: Stockfish not found! AI will use fallback random moves.")
-        print("Install Stockfish: apt-get install stockfish")
-    else:
-        print("✅ Stockfish engine ready!")
-    
-    app.run(host='0.0.0.0', port=8004, debug=True)
+    port = int(os.environ.get('PORT', 8004))
+    app.run(host='0.0.0.0', port=port, debug=False)  # debug=False para produção
