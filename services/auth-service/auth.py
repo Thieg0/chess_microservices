@@ -2,8 +2,9 @@ import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 from flask import request, jsonify
+import os
 
-SECRET_KEY = 'TESTE_TESTE'  # MUDAR EM PRODUÇÃO!
+SECRET_KEY = os.environ.get("SECRET_KEY", "TESTE_TESTE")
 
 def generate_token(user_id):
     """Gera um token JWT para o usuário"""
