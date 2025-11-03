@@ -3,6 +3,8 @@ import axios from 'axios';
 // URL do API Gateway (localhost em desenvolvimento)
 const API_URL = process.env.REACT_APP_API_URL || 'https://chess-api-gateway.onrender.com';
 
+console.log("API URL:", API_URL);
+
 // Instância do axios configurada
 const api = axios.create({
   baseURL: API_URL,
