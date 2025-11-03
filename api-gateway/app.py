@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 CORS(app, origins=[
     "https://chess-microservices.vercel.app",  # Frontend deployado
-    "http://localhost:3000"                     # Frontend local
+    "http://localhost:3000",                     # Frontend local
     "https://*.vercel.app"
 ])  # Permite requisições do frontend
 
