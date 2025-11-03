@@ -8,7 +8,7 @@
 Sistema de jogo de xadrez online desenvolvido com arquitetura de microserviços, utilizando Python (Flask) no backend e React no frontend. Projeto desenvolvido para a disciplina de Engenharia de Software da UFAL.
 
 <p align="center">
-  <img src="docs/images/game-screenshot.png" alt="Jogo de Xadrez" width="600"/>
+  https://chess-microservices.vercel.app/
 </p>
 
 ## 📋 Índice
