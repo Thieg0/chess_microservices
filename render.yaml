@@ -1,0 +1,67 @@
+services:
+  # API Gateway
+  - type: web
+    name: chess-api-gateway
+    env: docker
+    dockerfilePath: ./api-gateway/Dockerfile
+    dockerContext: ./api-gateway
+    envVars:
+      - key: AUTH_SERVICE_URL
+        value: https://chess-auth-service.onrender.com
+      - key: GAME_SERVICE_URL
+        value: https://chess-game-service.onrender.com
+      - key: AI_SERVICE_URL
+        value: https://chess-ai-service.onrender.com
+      - key: HISTORY_SERVICE_URL
+        value: https://chess-history-service.onrender.com
+
+  # Auth Service
+  - type: web
+    name: chess-auth-service
+    env: docker
+    dockerfilePath: ./services/auth-service/Dockerfile
+    dockerContext: ./services/auth-service
+    disk:
+      name: auth-db
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_PATH
+        value: /data/database.db
+      - key: SECRET_KEY
+        generateValue: true
+
+  # Game Service
+  - type: web
+    name: chess-game-service
+    env: docker
+    dockerfilePath: ./services/game-service/Dockerfile
+    dockerContext: ./services/game-service
+    disk:
+      name: game-db
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_PATH
+        value: /data/database.db
+
+  # AI Service
+  - type: web
+    name: chess-ai-service
+    env: docker
+    dockerfilePath: ./services/ai-service/Dockerfile
+    dockerContext: ./services/ai-service
+
+  # History Service
+  - type: web
+    name: chess-history-service
+    env: docker
+    dockerfilePath: ./services/history-service/Dockerfile
+    dockerContext: ./services/history-service
+    disk:
+      name: history-db
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_PATH
+        value: /data/history.db

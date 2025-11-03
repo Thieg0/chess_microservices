@@ -1,11 +1,17 @@
 import sqlite3
 from datetime import datetime
 import json
+import os
 
-DATABASE = '/tmp/database.db'
+DATABASE = os.environ.get("DATABASE_PATH", "/tmp/database.db")
 
 def init_db():
     """Inicializa o banco de dados"""
+    # Criar diretório se não existir
+    db_dir = os.path.dirname(DATABASE)
+    if db_dir and not os.path.exists(db_dir):
+        os.makedirs(db_dir)
+
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     
@@ -42,7 +48,7 @@ def init_db():
     
     conn.commit()
     conn.close()
-    print("✅ Game database initialized!")
+    print(f"✅ Game database initialized at {DATABASE}!")
 
 def get_db():
     """Retorna conexão com o banco"""

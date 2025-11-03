@@ -1,11 +1,17 @@
 import sqlite3
 import bcrypt
 from datetime import datetime
+import os
 
-DATABASE = "/tmp/database.db"
+DATABASE = os.environ.get("DATABASE_PATH", "/tmp/database.db")
 
 def init_db():
     """Inicializa o banco de dados"""
+    # Criar diretório se não existir
+    db_dir = os.path.dirname(DATABASE)
+    if db_dir and not os.path.exists(db_dir):
+        os.makedirs(db_dir, exist_ok=True)
+        
     conn = sqlite3.connect(DATABASE)
     cursor = sqlite3.connect(DATABASE)
 
@@ -18,6 +24,10 @@ def init_db():
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                    )
                 ''')
+    
+    conn.commit()
+    conn.close()
+    print(f"✅ Auth database initialized at {DATABASE}")
     
 def get_db():
     """Retorna uma conexão com o banco de dados"""

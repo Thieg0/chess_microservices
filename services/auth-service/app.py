@@ -2,6 +2,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import models
 import auth
+import os
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 8001))
+    app.run(host='0.0.0.0', port=port, debug=False)  # debug=False para produção
 
 app = Flask(__name__)
 CORS(app)  # Permite requisições do frontend

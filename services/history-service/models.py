@@ -1,10 +1,16 @@
 import sqlite3
 from datetime import datetime
+import os
 
-DATABASE = '/tmp/history.db'
+DATABASE = os.environ.get("DATABASE_PATH", "/tmp/history.db")
 
 def init_db():
     """Inicializa o banco de dados do histórico"""
+    # Criar diretório se não existir
+    db_dir = os.path.dirname(DATABASE)
+    if db_dir and not os.path.exists(db_dir):
+        os.makedirs(db_dir)
+
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     
@@ -41,7 +47,7 @@ def init_db():
     
     conn.commit()
     conn.close()
-    print("✅ History database initialized!")
+    print(f"✅ History database initialized at {DATABASE}!")
 
 def get_db():
     """Retorna conexão com o banco"""
