@@ -3,13 +3,19 @@
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![React](https://img.shields.io/badge/React-18-61DAFB)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)
-![License](https://img.shields.io/badge/License-MIT-green)
+![Deploy](https://img.shields.io/badge/Deploy-Live-success)
 
 Sistema de jogo de xadrez online desenvolvido com arquitetura de microserviços, utilizando Python (Flask) no backend e React no frontend. Projeto desenvolvido para a disciplina de Engenharia de Software da UFAL.
 
 <p align="center">
-  https://chess-microservices.vercel.app/
+  <a href="https://chess-microservices.vercel.app">
+    <img src="https://img.shields.io/badge/🎮_JOGAR_AGORA-success?style=for-the-badge" alt="Jogar Agora"/>
+  </a>
 </p>
+
+**🌐 SISTEMA EM PRODUÇÃO:** https://chess-microservices.vercel.app
+
+---
 
 ## 📋 Índice
 
