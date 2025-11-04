@@ -1,9 +1,51 @@
-import React, { useRef, useState } from "react";
+import React, { use, useRef, useState } from "react";
 import ChessBoard from "./ChessBoard";
 import { login, register } from "./services/api";
 import "./App.css";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [servicesReady, setServicesReady] = useState(false);
+
+  useEffect(() => {
+    const wakeUpServices = async () => {
+      console.log('Aquecendo serviços...');
+
+      const services = [
+        'https://chess-api-gateway.onrender.com/health',
+        'https://chess-auth-service.onrender.com/health',
+        'https://chess-game-service.onrender.com/health',
+        'https://chess-ai-service.onrender.com/health',
+        'https://chess-history-service.onrender.com/health'
+      ];
+
+      try {
+        await Promisse.all(
+          services.map(url => 
+            fetch(url).catch(err => console.log('Acordando...', url))
+          )
+        );
+        console.log('Todos os serviços estão acordados!');
+        setServicesReady(true);
+      } catch (error) {
+        console.log('Alguns serviços ainda estão acordando...');
+        setServicesReady(true); // Mesmo que falhe, prosseguir
+      }
+    };
+
+    wakeUpServices();
+  }, []);
+
+  if (!servicesReady) {
+    return (
+      <div style={{textAlign: 'center', marginTop: '100px'}}>
+        <h2>🔥 Aquecendo serviços...</h2>
+        <p>Aguarde ~30 segundos (primeira vez pode demorar)</p>
+        <p>⏳ Render free tier está acordando os microserviços...</p>
+      </div>
+    );
+  }
+      
   const [loggedIn, setLoggedIn] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [playerName, setPlayerName] = useState("");
