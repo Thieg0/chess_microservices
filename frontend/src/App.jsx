@@ -5,6 +5,21 @@ import "./App.css";
 
 function App() {
   const [servicesReady, setServicesReady] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  const [playerName, setPlayerName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [gameMode, setGameMode] = useState("local");
+  const [aiDifficulty, setAiDifficulty] = useState("medium");
+  const [showModeSelection, setShowModeSelection] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+  const [boardOrientation, setBoardOrientation] = useState("white");
+  const [gameKey, setGameKey] = useState(0);
+  const boardRef = useRef(null);
 
   useEffect(() => {
     const wakeUpServices = async () => {
@@ -19,7 +34,7 @@ function App() {
       ];
 
       try {
-        await Promisse.all(
+        await Promise.all(
           services.map(url => 
             fetch(url).catch(err => console.log('Acordando...', url))
           )
@@ -45,21 +60,6 @@ function App() {
     );
   }
       
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
-  const [playerName, setPlayerName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [userId, setUserId] = useState(null);
-  const [gameMode, setGameMode] = useState("local");
-  const [aiDifficulty, setAiDifficulty] = useState("medium");
-  const [showModeSelection, setShowModeSelection] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  
-  const [boardOrientation, setBoardOrientation] = useState("white");
-  const [gameKey, setGameKey] = useState(0);
-  const boardRef = useRef(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
