@@ -1,8 +1,7 @@
-import React, { use, useRef, useState } from "react";
+import React, { use, useRef, useState, useEffect } from "react";
 import ChessBoard from "./ChessBoard";
 import { login, register } from "./services/api";
 import "./App.css";
-import { useEffect, useState } from "react";
 
 function App() {
   const [servicesReady, setServicesReady] = useState(false);
