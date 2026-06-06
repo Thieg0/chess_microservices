@@ -14,6 +14,29 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
   const [waitingForAI, setWaitingForAI] = useState(false);
   const gameCreated = useRef(false);
 
+  // Lê o tema passado pelo framework via URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const frameworkTheme = urlParams.get('theme');
+
+  // Define as cores do tabuleiro baseado no tema
+  const boardColors = {
+    colorful: {
+      light: { backgroundColor: '#FFE4B5' },
+      dark:  { backgroundColor: '#9370DB' }
+    },
+    classic: {
+      light: { backgroundColor: '#F0D9B5' },
+      dark:  { backgroundColor: '#B58863' }
+    },
+    modern: {
+      light: { backgroundColor: '#EEEED2' },
+      dark:  { backgroundColor: '#769656' }
+    }
+  };
+
+  // Pega as cores do tema atual ou usa o padrão
+  const currentTheme = boardColors[frameworkTheme] || boardColors.classic;
+
   // Criar nova partida quando o componente monta
   useEffect(() => {
     if (userId && !gameCreated.current) {
@@ -217,6 +240,8 @@ const onDrop = async (sourceSquare, targetSquare) => {
         boardOrientation={boardOrientation}
         arePiecesDraggable={true}
         animationDuration={150}
+        customDarkSquareStyle={currentTheme.dark}
+        customLightSquareStyle={currentTheme.light}
       />
 
       {/* Info adicional */}

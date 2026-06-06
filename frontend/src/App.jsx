@@ -1,7 +1,17 @@
-import React, { use, useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ChessBoard from "./ChessBoard";
 import { login, register } from "./services/api";
 import "./App.css";
+
+// Lê os parâmetros da URL do framework
+function getFrameworkParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    theme: params.get('theme') || null,
+    mode: params.get('mode') || null,
+    engine: params.get('engine') || null
+  };
+}
 
 function App() {
   const [servicesReady, setServicesReady] = useState(false);
@@ -20,6 +30,8 @@ function App() {
   const [boardOrientation, setBoardOrientation] = useState("white");
   const [gameKey, setGameKey] = useState(0);
   const boardRef = useRef(null);
+
+  const frameworkParams = getFrameworkParams();
 
   useEffect(() => {
     const wakeUpServices = async () => {
@@ -59,7 +71,6 @@ function App() {
       </div>
     );
   }
-      
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -77,6 +88,13 @@ function App() {
       setUserId(data.user_id);
       setPlayerName(data.name);
       setLoggedIn(true);
+
+      // Se veio do framework, inicia automaticamente
+      if (frameworkParams.theme || frameworkParams.mode) {
+        const mode = frameworkParams.mode === 'local' ? 'local' : 'ai';
+        const difficulty = frameworkParams.engine === 'minimax' ? 'easy' : 'medium';
+        setTimeout(() => startNewGame(mode, difficulty), 500);
+      }
     } catch (err) {
       setError(err.error || "Erro ao fazer login");
     } finally {
@@ -99,6 +117,13 @@ function App() {
       
       setUserId(data.user_id);
       setLoggedIn(true);
+
+      // Se veio do framework, inicia automaticamente
+      if (frameworkParams.theme || frameworkParams.mode) {
+        const mode = frameworkParams.mode === 'local' ? 'local' : 'ai';
+        const difficulty = frameworkParams.engine === 'minimax' ? 'easy' : 'medium';
+        setTimeout(() => startNewGame(mode, difficulty), 500);
+      }
     } catch (err) {
       setError(err.error || "Erro ao registrar");
     } finally {
@@ -121,9 +146,9 @@ function App() {
     setShowModeSelection(true);
   };
 
-  const startNewGame = (mode, difficullty = 'medium') => {
+  const startNewGame = (mode, difficulty = 'medium') => {
     setGameMode(mode);
-    setAiDifficulty(difficullty);
+    setAiDifficulty(difficulty);
     setGameKey((prevKey) => prevKey + 1); // Forçar re-montagem do ChessBoard
     setShowModeSelection(false);
   }
@@ -266,7 +291,7 @@ function App() {
 
         <div className="menu-section">
           <h2>Menu</h2>
-          <p>Modo: {gameMode == 'local' ? '👥 Local' : `🤖 IA (${aiDifficulty})`}</p>
+          <p>Modo: {gameMode === 'local' ? '👥 Local' : `🤖 IA (${aiDifficulty})`}</p>
           <button onClick={handleNewGame}>Novo Jogo</button>
           <button onClick={handleUndoMove}>Desfazer Jogada</button>
           <button onClick={handleFlipBoard}>Mudar Cor das Peças</button>

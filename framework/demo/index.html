@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FrameworkXadrez v1.0 - UFAL 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --primary: #0f3460;
+            --accent: #e94560;
+            --text-main: #ffffff;
+            --text-secondary: #94a3b8;
+            --edu-light: #FFE4B5;
+            --edu-dark: #9370DB;
+            --classic-light: #F0D9B5;
+            --classic-dark: #B58863;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #e94560, #9370DB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .info-list {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .color-preview {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .color-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--accent);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .architecture-section {
+            background-color: var(--primary);
+            padding: 3rem;
+            border-radius: 1rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .architecture-section h2 {
+            margin-bottom: 2rem;
+        }
+
+        .hotspots {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .hotspot-tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.7rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .pattern-info {
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FrameworkXadrez v1.0 - UFAL 2026</h1>
+            <p class="subtitle">Demonstração das Aplicações Construídas com Reuso de Software</p>
+        </header>
+
+        <div class="apps-grid">
+            <!-- Xadrez Educacional -->
+            <div class="card">
+                <h2 class="card-title">XadrezEducacional</h2>
+                <ul class="info-list">
+                    <li class="info-item">
+                        <span class="info-label">Engine:</span>
+                        <span>Minimax Engine</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Tema:</span>
+                        <span>Colorido</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Cores:</span>
+                        <div class="color-preview">
+                            <div class="color-box" style="background-color: #FFE4B5;"></div>
+                            <div class="color-box" style="background-color: #9370DB;"></div>
+                        </div>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Modo:</span>
+                        <span>Tutorial</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">IA habilitada:</span>
+                        <span>Sim</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Jogadores:</span>
+                        <span>1</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Dicas:</span>
+                        <span>Habilitadas</span>
+                    </li>
+                </ul>
+                <a href="https://chess-microservices.vercel.app?theme=colorful&mode=tutorial&engine=minimax" target="_blank" class="btn">▶ Jogar Agora</a>
+            </div>
+
+            <!-- Xadrez Torneio -->
+            <div class="card">
+                <h2 class="card-title">XadrezTorneio</h2>
+                <ul class="info-list">
+                    <li class="info-item">
+                        <span class="info-label">Engine:</span>
+                        <span>Stockfish Engine</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Tema:</span>
+                        <span>Clássico</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Cores:</span>
+                        <div class="color-preview">
+                            <div class="color-box" style="background-color: #F0D9B5;"></div>
+                            <div class="color-box" style="background-color: #B58863;"></div>
+                        </div>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Modo:</span>
+                        <span>Local</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">IA habilitada:</span>
+                        <span>Não</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Jogadores:</span>
+                        <span>2</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">Dicas:</span>
+                        <span>Desabilitadas</span>
+                    </li>
+                </ul>
+                <a href="https://chess-microservices.vercel.app?theme=classic&mode=local&engine=stockfish" target="_blank" class="btn">▶ Jogar Agora</a>
+            </div>
+        </div>
+
+        <section class="architecture-section">
+            <h2>Arquitetura do Framework</h2>
+            <div class="hotspots">
+                <span class="hotspot-tag">🔧 IChessEngine</span>
+                <span class="hotspot-tag">🎨 IBoardTheme</span>
+                <span class="hotspot-tag">🎮 IGameMode</span>
+                <span class="hotspot-tag">💾 IStorageStrategy</span>
+            </div>
+        </section>
+
+        <footer>
+            <p class="pattern-info">Padrão Utilizado: Template Method</p>
+            <p>Projeto para a disciplina de Engenharia de Software / Reuso - UFAL 2026</p>
+            <p><a href="https://github.com/Thieg0/chess_microservices" target="_blank">Ver no GitHub</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Animação simples de entrada
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 200 * (index + 1));
+            });
+        });
+    </script>
+</body>
+</html>
