@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef, useRef } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import { createGame, makeMove, getGame, getAIMove} from "./services/api";
+import { createGame, makeMove, getAIMove} from "./services/api";
 
 const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', aiDifficulty = 'medium' }, ref) => {
   const [game, setGame] = useState(new Chess());
   const [gameId, setGameId] = useState(null);
   const [currentTurn, setCurrentTurn] = useState("white");
   const [gameStatus, setGameStatus] = useState("active");
-  const [winner, setWinner] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [waitingForAI, setWaitingForAI] = useState(false);
@@ -38,6 +37,7 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
   const currentTheme = boardColors[frameworkTheme] || boardColors.classic;
 
   // Criar nova partida quando o componente monta
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (userId && !gameCreated.current) {
       gameCreated.current = true;
@@ -110,7 +110,6 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
       setGame(updatedGame);
       setCurrentTurn(data.current_turn);
       setGameStatus(data.status);
-      setWinner(data.winner);
 
       if (data.is_checkmate) {
         setMessage(`Xeque-mate! ${data.winner === 'white' ? 'Você venceu!' : 'IA venceu!'}`);
@@ -128,6 +127,7 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (
       gameMode === 'ai' && 
@@ -178,7 +178,6 @@ const onDrop = async (sourceSquare, targetSquare) => {
     setGame(updatedGame);
     setCurrentTurn(data.current_turn);
     setGameStatus(data.status);
-    setWinner(data.winner);
 
     // Mensagens baseadas no status
     if (data.is_checkmate) {
