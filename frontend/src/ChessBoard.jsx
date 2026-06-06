@@ -51,11 +51,12 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
 
     console.log("=== INIT GAME ===");
     console.log("UserId:", userId);
+    console.log("GameMode:", gameMode);
     
     try {
-      // Criar partida no backend
+      // Criar partida no backend usando o modo correto
       console.log("Chamando createGame...");
-      const data = await createGame("local", userId, userId);
+      const data = await createGame(gameMode, userId, userId);
       console.log("createGame retornou:", data);
       
       setGameId(data.game_id);
