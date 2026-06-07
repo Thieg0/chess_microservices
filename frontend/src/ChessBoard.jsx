@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef, useRef } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
-import { createGame, makeMove, getAIMove} from "./services/api";
+import { createGame, makeMove, getAIMove, getHint } from "./services/api";
 
-const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', aiDifficulty = 'medium' }, ref) => {
+const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', aiDifficulty = 'medium', hintsEnabled = false }, ref) => {
   const [game, setGame] = useState(new Chess());
   const [gameId, setGameId] = useState(null);
   const [currentTurn, setCurrentTurn] = useState("white");
@@ -11,6 +11,8 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [waitingForAI, setWaitingForAI] = useState(false);
+  const [hint, setHint] = useState(null);
+  const [loadingHint, setLoadingHint] = useState(false);
   const gameCreated = useRef(false);
 
   // Lê o tema passado pelo framework via URL
@@ -144,6 +146,23 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
     }
   }, [currentTurn, gameMode, gameStatus, waitingForAI, gameId]);
 
+  // Busca dica de melhor movimento
+  const fetchHint = async () => {
+    if (!hintsEnabled || !gameId) return;
+    setLoadingHint(true);
+    setHint(null);
+    try {
+      const currentFen = game.fen();
+      const response = await getHint(currentFen);
+      if (response.success) {
+        setHint(response.hint);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dica:", error);
+    } finally {
+      setLoadingHint(false);
+    }
+  };
   
   
 const onDrop = async (sourceSquare, targetSquare) => {
@@ -179,6 +198,9 @@ const onDrop = async (sourceSquare, targetSquare) => {
     setCurrentTurn(data.current_turn);
     setGameStatus(data.status);
 
+    // Limpa a dica após o movimento
+    setHint(null);
+
     // Mensagens baseadas no status
     if (data.is_checkmate) {
       setMessage(`Xeque-mate! ${data.winner === 'white' ? 'Brancas' : 'Pretas'} venceram!`);
@@ -211,6 +233,7 @@ const onDrop = async (sourceSquare, targetSquare) => {
         gameCopy.undo();
         setGame(gameCopy);
         setMessage("Jogada desfeita (apenas localmente)");
+        setHint(null);
       } else {
         setMessage("Nenhuma jogada para desfazer");
       }
@@ -243,6 +266,44 @@ const onDrop = async (sourceSquare, targetSquare) => {
         customDarkSquareStyle={currentTheme.dark}
         customLightSquareStyle={currentTheme.light}
       />
+
+      {hintsEnabled && (
+        <div style={{
+          textAlign: 'center',
+          marginTop: '10px'
+        }}>
+          <button
+            onClick={fetchHint}
+            disabled={loadingHint || gameStatus !== 'active'}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            {loadingHint ? '⏳ Buscando dica...' : '💡 Pedir Dica'}
+          </button>
+          {hint && (
+            <div style={{
+              marginTop: '8px',
+              padding: '8px',
+              backgroundColor: '#f0e6ff',
+              borderRadius: '5px',
+              color: '#333',
+              fontSize: '0.9rem'
+            }}>
+              💡 Dica: Mova a peça de 
+              <strong> {hint.from}</strong> para 
+              <strong> {hint.to}</strong>
+              {hint.san && ` (${hint.san})`}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Info adicional */}
       <div style={{

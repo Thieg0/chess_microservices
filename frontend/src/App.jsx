@@ -32,6 +32,7 @@ function App() {
   const boardRef = useRef(null);
 
   const frameworkParams = getFrameworkParams();
+  const hintsEnabled = frameworkParams.mode === 'tutorial';
 
   useEffect(() => {
     const wakeUpServices = async () => {
@@ -286,6 +287,7 @@ function App() {
             userId={userId}
             gameMode={gameMode}
             aiDifficulty={aiDifficulty}
+            hintsEnabled={hintsEnabled}
           />
         </div>
 
