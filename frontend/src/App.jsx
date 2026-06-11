@@ -39,11 +39,11 @@ function App() {
       console.log('Aquecendo serviços...');
 
       const services = [
-        'https://chess-api-gateway.onrender.com/health',
-        'https://chess-auth-service.onrender.com/health',
-        'https://chess-game-service.onrender.com/health',
-        'https://chess-ai-service.onrender.com/health',
-        'https://chess-history-service.onrender.com/health'
+        'https://chess-api-gateway-s4wz.onrender.com/health',
+        'https://chess-auth-service-pzt8.onrender.com/health',
+        'https://chess-game-service-mvnr.onrender.com/health',
+        'https://chess-ai-service-qaen.onrender.com/health',
+        'https://chess-history-service-mc3l.onrender.com/health'
       ];
 
       try {
