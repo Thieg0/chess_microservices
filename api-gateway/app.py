@@ -1,16 +1,29 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 import gateway
 import os
 
 app = Flask(__name__)
 
-CORS(app, origins=[
+# Lista de origens permitidas
+ALLOWED_ORIGINS = [
     "https://chess-microservices.vercel.app",
-    "https://chess-microservices-4gmhidvas-thieg0s-projects.vercel.app",
-    "https://*.vercel.app",
-    "http://localhost:3000"
-])
+    "http://localhost:3000",
+]
+
+def is_allowed_origin(origin):
+    # Permite qualquer subdomínio do vercel.app
+    # para suportar preview deployments
+    if not origin:
+        return False
+    if origin in ALLOWED_ORIGINS:
+        return True
+    if origin.endswith(".vercel.app"):
+        return True
+    return False
+
+CORS(app, origins=is_allowed_origin,
+     supports_credentials=True)
 
 @app.route('/health', methods=['GET'])
 def health():
