@@ -6,10 +6,11 @@ import os
 app = Flask(__name__)
 
 CORS(app, origins=[
-    "https://chess-microservices.vercel.app",  # Frontend deployado
-    "http://localhost:3000",                     # Frontend local
-    "https://*.vercel.app"
-])  # Permite requisições do frontend
+    "https://chess-microservices.vercel.app",
+    "https://chess-microservices-4gmhidvas-thieg0s-projects.vercel.app",
+    "https://*.vercel.app",
+    "http://localhost:3000"
+])
 
 @app.route('/health', methods=['GET'])
 def health():
