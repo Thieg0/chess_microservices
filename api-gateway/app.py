@@ -1,29 +1,26 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import gateway
 import os
 
 app = Flask(__name__)
 
-# Lista de origens permitidas
-ALLOWED_ORIGINS = [
+# CORS simples com lista de origens permitidas
+CORS(app, origins=[
     "https://chess-microservices.vercel.app",
-    "http://localhost:3000",
-]
+    "http://localhost:3000"
+])
 
-def is_allowed_origin(origin):
-    # Permite qualquer subdomínio do vercel.app
-    # para suportar preview deployments
-    if not origin:
-        return False
-    if origin in ALLOWED_ORIGINS:
-        return True
-    if origin.endswith(".vercel.app"):
-        return True
-    return False
-
-CORS(app, origins=is_allowed_origin,
-     supports_credentials=True)
+# Handler para adicionar CORS em todas as respostas
+@app.after_request
+def after_request(response):
+    origin = request.headers.get('Origin', '')
+    # Permite qualquer origem vercel.app
+    if origin.endswith('.vercel.app') or origin == 'http://localhost:3000':
+        response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+        response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
+    return response
 
 @app.route('/health', methods=['GET'])
 def health():
