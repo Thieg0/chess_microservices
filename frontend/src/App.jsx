@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import ChessBoard from "./ChessBoard";
-import { login, register } from "./services/api";
+import api, { login, register } from "./services/api";
 import "./App.css";
 
 // Lê os parâmetros da URL do framework
@@ -26,6 +26,7 @@ function App() {
   const [showModeSelection, setShowModeSelection] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [recommendation, setRecommendation] = useState(null);
   
   const [boardOrientation, setBoardOrientation] = useState("white");
   const [gameKey, setGameKey] = useState(0);
@@ -73,6 +74,15 @@ function App() {
     );
   }
 
+  const fetchRecommendation = async (userId) => {
+    try {
+      const response = await api.get(`/recommendations/${userId}`);
+      setRecommendation(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar recomendação:', error);
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -89,6 +99,7 @@ function App() {
       setUserId(data.user_id);
       setPlayerName(data.name);
       setLoggedIn(true);
+      fetchRecommendation(data.user_id);
 
       // Se veio do framework, inicia automaticamente
       if (frameworkParams.theme || frameworkParams.mode) {
@@ -118,6 +129,7 @@ function App() {
       
       setUserId(data.user_id);
       setLoggedIn(true);
+      fetchRecommendation(data.user_id);
 
       // Se veio do framework, inicia automaticamente
       if (frameworkParams.theme || frameworkParams.mode) {
@@ -278,6 +290,25 @@ function App() {
       </div>
     )}
 
+      {recommendation && (
+        <div style={{
+          textAlign: 'center',
+          padding: '10px',
+          margin: '10px auto',
+          maxWidth: '500px',
+          backgroundColor: '#e8f4f8',
+          borderRadius: '8px',
+          border: '1px solid #9370DB'
+        }}>
+          <strong>💡 Recomendação:</strong>{' '}
+          {recommendation.recommended_mode === 'ai' ? '🤖 Jogue contra IA' : '👥 Jogue Local'}
+          {' | '}
+          Dificuldade: <strong>{recommendation.recommended_difficulty}</strong>
+          {' | '}
+          <small style={{color: '#666'}}>{recommendation.reason}</small>
+        </div>
+      )}
+
       <div className="content">
         <div className="board-section">
           <ChessBoard
@@ -307,3 +338,4 @@ function App() {
 }
 
 export default App;
+
