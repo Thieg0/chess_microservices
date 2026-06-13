@@ -8,12 +8,14 @@ GAME_SERVICE_URL = os.getenv('GAME_SERVICE_URL', 'http://localhost:8003')
 AI_SERVICE_URL = os.getenv('AI_SERVICE_URL', 'http://localhost:8004')
 HISTORY_SERVICE_URL = os.getenv('HISTORY_SERVICE_URL', 'http://localhost:8005')
 RECOMMENDATION_SERVICE_URL = os.getenv('RECOMMENDATION_SERVICE_URL', 'http://localhost:8006')
+MULTIPLAYER_SERVICE_URL = os.getenv('MULTIPLAYER_SERVICE_URL', 'http://localhost:8007')
 
 # Rotas que não precisam de autenticação
 PUBLIC_ROUTES = [
     '/auth/register',
     '/auth/login',
-    '/health'
+    '/health',
+    '/rooms' # Listagem de salas é pública
 ]
 
 def verify_token(token):
@@ -58,6 +60,9 @@ def get_service_url(path):
     elif path.startswith('/recommendations'):
         print(f"✅ Routing to RECOMMENDATION_SERVICE_URL: {RECOMMENDATION_SERVICE_URL}")
         return RECOMMENDATION_SERVICE_URL
+    elif path.startswith('/multiplayer') or path.startswith('/rooms'):
+        print(f"✅ Routing to MULTIPLAYER_SERVICE_URL: {MULTIPLAYER_SERVICE_URL}")
+        return MULTIPLAYER_SERVICE_URL
     else:
         print(f"❌ No service found for path: {path}")
         return None

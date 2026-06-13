@@ -13,12 +13,14 @@ services:
       - AI_SERVICE_URL=http://ai-service:8004
       - HISTORY_SERVICE_URL=http://history-service:8005
       - RECOMMENDATION_SERVICE_URL=http://recommendation-service:8006
+      - MULTIPLAYER_SERVICE_URL=http://multiplayer-service:8007
     depends_on:
       - auth-service
       - game-service
       - ai-service
       - history-service
       - recommendation-service
+      - multiplayer-service
     networks:
       - chess-network
 
@@ -73,6 +75,15 @@ services:
       - HISTORY_SERVICE_URL=http://history-service:8005
     depends_on:
       - history-service
+    networks:
+      - chess-network
+
+  # Multiplayer Service
+  multiplayer-service:
+    build: ./services/multiplayer-service
+    container_name: chess-multiplayer-service
+    ports:
+      - "8007:8007"
     networks:
       - chess-network
 
