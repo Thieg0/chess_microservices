@@ -15,7 +15,8 @@ PUBLIC_ROUTES = [
     '/auth/register',
     '/auth/login',
     '/health',
-    '/rooms' # Listagem de salas é pública
+    '/rooms', # Listagem de salas é pública
+    '/recommendations'
 ]
 
 def verify_token(token):
