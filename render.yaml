@@ -67,3 +67,10 @@ services:
         sync: false
       - key: HISTORY_SERVICE_URL
         value: https://chess-history-service-mc3l.onrender.com
+
+  # Multiplayer Service (WebSocket - acesso direto do frontend)
+  - type: web
+    name: chess-multiplayer-service
+    env: docker
+    dockerfilePath: ./services/multiplayer-service/Dockerfile
+    dockerContext: ./services/multiplayer-service
