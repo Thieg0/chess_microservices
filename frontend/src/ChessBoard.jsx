@@ -3,11 +3,12 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { createGame, makeMove, getAIMove, getHint } from "./services/api";
 
-const ChessBoard = forwardRef(({ 
-  boardOrientation, userId, gameMode = 'local', 
+const ChessBoard = forwardRef(({
+  boardOrientation, userId, gameMode = 'local',
   aiDifficulty = 'medium', hintsEnabled = false,
-  socket = null, roomId = null, 
-  playerColor = 'white', isMultiplayer = false 
+  socket = null, roomId = null,
+  playerColor = 'white', isMultiplayer = false,
+  boardTheme = 'classic'
 }, ref) => {
   const [game, setGame] = useState(new Chess());
   const [gameId, setGameId] = useState(null);
@@ -42,7 +43,7 @@ const ChessBoard = forwardRef(({
   };
 
   // Pega as cores do tema atual ou usa o padrão
-  const currentTheme = boardColors[frameworkTheme] || boardColors.classic;
+  const currentTheme = boardColors[frameworkTheme] || boardColors[boardTheme] || boardColors.classic;
 
   // Criar nova partida quando o componente monta
   // eslint-disable-next-line react-hooks/exhaustive-deps

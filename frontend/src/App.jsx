@@ -38,6 +38,7 @@ function App() {
   const [playerColor, setPlayerColor] = useState(null);
   const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   
+  const [boardTheme, setBoardTheme] = useState('classic');
   const [boardOrientation, setBoardOrientation] = useState("white");
   const [gameKey, setGameKey] = useState(0);
   const boardRef = useRef(null);
@@ -385,6 +386,7 @@ function App() {
             roomId={roomId}
             playerColor={playerColor}
             isMultiplayer={multiplayerMode}
+            boardTheme={boardTheme}
           />
         </div>
 
@@ -404,6 +406,28 @@ function App() {
           <button onClick={handleNewGame}>Novo Jogo</button>
           <button onClick={handleUndoMove}>Desfazer Jogada</button>
           <button onClick={handleFlipBoard}>Mudar Cor das Peças</button>
+          <div style={{marginTop: '10px'}}>
+            <p style={{marginBottom: '5px', fontSize: '0.9rem'}}>
+              🎨 Tema do Tabuleiro:
+            </p>
+            <select
+              value={boardTheme}
+              onChange={(e) => setBoardTheme(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '8px',
+                borderRadius: '5px',
+                backgroundColor: '#333',
+                color: 'white',
+                border: '1px solid #555',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="classic">♟️ Clássico</option>
+              <option value="modern">🌿 Moderno</option>
+              <option value="colorful">🎨 Colorido</option>
+            </select>
+          </div>
           <button onClick={handleLogout} style={{marginTop: '20px', backgroundColor: '#c44'}}>
             Sair
           </button>
