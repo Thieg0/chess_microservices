@@ -1,7 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import ChessBoard from "./ChessBoard";
 import api, { login, register } from "./services/api";
+import io from 'socket.io-client';
 import "./App.css";
+
+const MULTIPLAYER_URL = 'https://chess-multiplayer-service.onrender.com';
 
 // Lê os parâmetros da URL do framework
 function getFrameworkParams() {
@@ -27,6 +30,13 @@ function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [recommendation, setRecommendation] = useState(null);
+  
+  // Estados para Multiplayer
+  const [multiplayerMode, setMultiplayerMode] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const [roomId, setRoomId] = useState(null);
+  const [playerColor, setPlayerColor] = useState(null);
+  const [waitingForOpponent, setWaitingForOpponent] = useState(false);
   
   const [boardOrientation, setBoardOrientation] = useState("white");
   const [gameKey, setGameKey] = useState(0);
@@ -81,6 +91,47 @@ function App() {
     } catch (error) {
       console.error('Erro ao buscar recomendação:', error);
     }
+  };
+
+  const connectMultiplayer = (action) => {
+    const newSocket = io(MULTIPLAYER_URL);
+    setSocket(newSocket);
+
+    if (action === 'create') {
+      newSocket.emit('create_room', { player_name: playerName });
+      newSocket.on('room_created', (data) => {
+        setRoomId(data.room_id);
+        setPlayerColor(data.color);
+        setWaitingForOpponent(true);
+      });
+    } else if (action === 'join') {
+      const inputRoomId = prompt('Digite o ID da sala:');
+      if (inputRoomId) {
+        newSocket.emit('join_room', { 
+          room_id: inputRoomId, 
+          player_name: playerName 
+        });
+      }
+    }
+
+    newSocket.on('game_started', (data) => {
+      setPlayerColor(data.color);
+      setRoomId(data.room_id);
+      setWaitingForOpponent(false);
+      setMultiplayerMode(true);
+      setShowModeSelection(false);
+    });
+
+    newSocket.on('opponent_disconnected', () => {
+      alert('Oponente desconectou!');
+      setMultiplayerMode(false);
+      setSocket(null);
+      setRoomId(null);
+    });
+
+    newSocket.on('error', (data) => {
+      alert(data.message);
+    });
   };
 
   const handleLogin = async (e) => {
@@ -153,6 +204,7 @@ function App() {
     setEmail("");
     setPassword("");
     setUserId(null);
+    if (socket) socket.disconnect();
   };
 
   const handleNewGame = () => {
@@ -279,6 +331,16 @@ function App() {
               🤖 IA Difícil
             </button>
           </div>
+
+          <div className="ai-options">
+            <h3>🌐 Multiplayer Online</h3>
+            <button onClick={() => connectMultiplayer('create')}>
+              🏠 Criar Sala
+            </button>
+            <button onClick={() => connectMultiplayer('join')}>
+              🚪 Entrar em Sala
+            </button>
+          </div>
           
           <button 
             onClick={() => setShowModeSelection(false)}
@@ -325,6 +387,16 @@ function App() {
         <div className="menu-section">
           <h2>Menu</h2>
           <p>Modo: {gameMode === 'local' ? '👥 Local' : `🤖 IA (${aiDifficulty})`}</p>
+          {roomId && (
+            <p style={{fontSize: '0.8rem', color: '#666'}}>
+              Sala: <strong>{roomId}</strong>
+            </p>
+          )}
+          {waitingForOpponent && (
+            <p style={{color: 'orange'}}>
+              ⏳ Aguardando oponente...
+            </p>
+          )}
           <button onClick={handleNewGame}>Novo Jogo</button>
           <button onClick={handleUndoMove}>Desfazer Jogada</button>
           <button onClick={handleFlipBoard}>Mudar Cor das Peças</button>
@@ -338,4 +410,3 @@ function App() {
 }
 
 export default App;
-
