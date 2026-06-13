@@ -15,7 +15,7 @@ services:
       - key: HISTORY_SERVICE_URL
         value: https://chess-history-service-mc3l.onrender.com
       - key: RECOMMENDATION_SERVICE_URL
-        value: https://chess-recommendation-service-XXXX.onrender.com
+        value: https://chess-recommendation-service.onrender.com
 
   # Auth Service
   - type: web
