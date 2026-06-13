@@ -7,13 +7,15 @@ services:
     dockerContext: ./api-gateway
     envVars:
       - key: AUTH_SERVICE_URL
-        value: https://chess-auth-service.onrender.com
+        value: https://chess-auth-service-pzt8.onrender.com
       - key: GAME_SERVICE_URL
-        value: https://chess-game-service.onrender.com
+        value: https://chess-game-service-mvnr.onrender.com
       - key: AI_SERVICE_URL
-        value: https://chess-ai-service.onrender.com
+        value: https://chess-ai-service-qaen.onrender.com
       - key: HISTORY_SERVICE_URL
-        value: https://chess-history-service.onrender.com
+        value: https://chess-history-service-mc3l.onrender.com
+      - key: RECOMMENDATION_SERVICE_URL
+        value: https://chess-recommendation-service-XXXX.onrender.com
 
   # Auth Service
   - type: web
@@ -21,13 +23,9 @@ services:
     env: docker
     dockerfilePath: ./services/auth-service/Dockerfile
     dockerContext: ./services/auth-service
-    disk:
-      name: auth-db
-      mountPath: /data
-      sizeGB: 1
     envVars:
-      - key: DATABASE_PATH
-        value: /data/database.db
+      - key: DATABASE_URL
+        sync: false
       - key: SECRET_KEY
         generateValue: true
 
@@ -37,13 +35,9 @@ services:
     env: docker
     dockerfilePath: ./services/game-service/Dockerfile
     dockerContext: ./services/game-service
-    disk:
-      name: game-db
-      mountPath: /data
-      sizeGB: 1
     envVars:
-      - key: DATABASE_PATH
-        value: /data/database.db
+      - key: DATABASE_URL
+        sync: false
 
   # AI Service
   - type: web
@@ -58,10 +52,18 @@ services:
     env: docker
     dockerfilePath: ./services/history-service/Dockerfile
     dockerContext: ./services/history-service
-    disk:
-      name: history-db
-      mountPath: /data
-      sizeGB: 1
     envVars:
-      - key: DATABASE_PATH
-        value: /data/history.db
+      - key: DATABASE_URL
+        sync: false
+
+  # Recommendation Service
+  - type: web
+    name: chess-recommendation-service
+    env: docker
+    dockerfilePath: ./services/recommendation-service/Dockerfile
+    dockerContext: ./services/recommendation-service
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: HISTORY_SERVICE_URL
+        value: https://chess-history-service-mc3l.onrender.com

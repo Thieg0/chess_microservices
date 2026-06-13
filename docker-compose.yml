@@ -12,11 +12,13 @@ services:
       - GAME_SERVICE_URL=http://game-service:8003
       - AI_SERVICE_URL=http://ai-service:8004
       - HISTORY_SERVICE_URL=http://history-service:8005
+      - RECOMMENDATION_SERVICE_URL=http://recommendation-service:8006
     depends_on:
       - auth-service
       - game-service
       - ai-service
       - history-service
+      - recommendation-service
     networks:
       - chess-network
 
@@ -55,6 +57,22 @@ services:
       - "8005:8005"
     volumes:
       - history-data:/tmp
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    networks:
+      - chess-network
+
+  # Recommendation Service
+  recommendation-service:
+    build: ./services/recommendation-service
+    container_name: chess-recommendation-service
+    ports:
+      - "8006:8006"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - HISTORY_SERVICE_URL=http://history-service:8005
+    depends_on:
+      - history-service
     networks:
       - chess-network
 

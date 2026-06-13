@@ -7,6 +7,7 @@ AUTH_SERVICE_URL = os.getenv('AUTH_SERVICE_URL', 'http://localhost:8001')
 GAME_SERVICE_URL = os.getenv('GAME_SERVICE_URL', 'http://localhost:8003')
 AI_SERVICE_URL = os.getenv('AI_SERVICE_URL', 'http://localhost:8004')
 HISTORY_SERVICE_URL = os.getenv('HISTORY_SERVICE_URL', 'http://localhost:8005')
+RECOMMENDATION_SERVICE_URL = os.getenv('RECOMMENDATION_SERVICE_URL', 'http://localhost:8006')
 
 # Rotas que não precisam de autenticação
 PUBLIC_ROUTES = [
@@ -54,6 +55,9 @@ def get_service_url(path):
     elif path.startswith('/history'):
         print(f"✅ Routing to HISTORY_SERVICE_URL: {HISTORY_SERVICE_URL}")
         return HISTORY_SERVICE_URL
+    elif path.startswith('/recommendations'):
+        print(f"✅ Routing to RECOMMENDATION_SERVICE_URL: {RECOMMENDATION_SERVICE_URL}")
+        return RECOMMENDATION_SERVICE_URL
     else:
         print(f"❌ No service found for path: {path}")
         return None
