@@ -381,12 +381,16 @@ function App() {
             gameMode={gameMode}
             aiDifficulty={aiDifficulty}
             hintsEnabled={hintsEnabled}
+            socket={socket}
+            roomId={roomId}
+            playerColor={playerColor}
+            isMultiplayer={multiplayerMode}
           />
         </div>
 
         <div className="menu-section">
           <h2>Menu</h2>
-          <p>Modo: {gameMode === 'local' ? '👥 Local' : `🤖 IA (${aiDifficulty})`}</p>
+          <p>Modo: {multiplayerMode ? '🌐 Multiplayer Online' : gameMode === 'local' ? '👥 Local' : `🤖 IA (${aiDifficulty})`}</p>
           {roomId && (
             <p style={{fontSize: '0.8rem', color: '#666'}}>
               Sala: <strong>{roomId}</strong>

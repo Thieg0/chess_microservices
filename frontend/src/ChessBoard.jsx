@@ -3,10 +3,16 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { createGame, makeMove, getAIMove, getHint } from "./services/api";
 
-const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', aiDifficulty = 'medium', hintsEnabled = false }, ref) => {
+const ChessBoard = forwardRef(({ 
+  boardOrientation, userId, gameMode = 'local', 
+  aiDifficulty = 'medium', hintsEnabled = false,
+  socket = null, roomId = null, 
+  playerColor = 'white', isMultiplayer = false 
+}, ref) => {
   const [game, setGame] = useState(new Chess());
   const [gameId, setGameId] = useState(null);
   const [currentTurn, setCurrentTurn] = useState("white");
+  const [multiplayerTurn, setMultiplayerTurn] = useState('white');
   const [gameStatus, setGameStatus] = useState("active");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -41,11 +47,42 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
   // Criar nova partida quando o componente monta
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (userId && !gameCreated.current) {
+    if (userId && !gameCreated.current && !isMultiplayer) {
       gameCreated.current = true;
       initializeGame();
     }
-  }, [userId]);
+  }, [userId, isMultiplayer]);
+
+  // Efeito para Multiplayer Socket.IO
+  useEffect(() => {
+    if (!socket || !isMultiplayer) return;
+    
+    // Ouve movimentos do oponente
+    socket.on('move_made', (data) => {
+      const updatedGame = new Chess(data.fen);
+      setGame(updatedGame);
+      setMultiplayerTurn(data.turn);
+      setGameStatus(data.is_checkmate ? 'checkmate' : 
+                   data.is_check ? 'check' : 'active');
+      if (data.is_checkmate) {
+        setMessage('Xeque-mate!');
+      } else if (data.is_check) {
+        setMessage('Xeque!');
+      } else {
+        setMessage(`Vez de: ${data.turn === 'white' ? '⬜ Brancas' : '⬛ Pretas'}`);
+      }
+    });
+
+    socket.on('invalid_move', (data) => {
+      setMessage(`❌ ${data.message}`);
+    });
+
+    return () => {
+      socket.off('move_made');
+      socket.off('invalid_move');
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket, isMultiplayer]);
 
   const initializeGame = async () => {
     setLoading(true);
@@ -136,7 +173,8 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
       currentTurn === 'black' && 
       gameStatus === 'active' && 
       !waitingForAI &&
-      gameId
+      gameId &&
+      !isMultiplayer
     ) {
       const timer = setTimeout(() => {
         makeAIMove();
@@ -144,11 +182,11 @@ const ChessBoard = forwardRef(({ boardOrientation, userId, gameMode = 'local', a
 
       return () => clearTimeout(timer);
     }
-  }, [currentTurn, gameMode, gameStatus, waitingForAI, gameId]);
+  }, [currentTurn, gameMode, gameStatus, waitingForAI, gameId, isMultiplayer]);
 
   // Busca dica de melhor movimento
   const fetchHint = async () => {
-    if (!hintsEnabled || !gameId) return;
+    if (!hintsEnabled || (!gameId && !isMultiplayer)) return;
     setLoadingHint(true);
     setHint(null);
     try {
@@ -171,6 +209,22 @@ const onDrop = async (sourceSquare, targetSquare) => {
   if (loading || (gameStatus !== "active" && gameStatus !== "check") || waitingForAI) {
     console.log("❌ Bloqueado - loading ou jogo não ativo");
     return false;
+  }
+
+  // Se multiplayer, envia movimento via socket
+  if (isMultiplayer) {
+    // Verifica se é a vez do jogador
+    if (multiplayerTurn !== playerColor) {
+      setMessage('Não é sua vez!');
+      return false;
+    }
+    socket.emit('make_move', {
+      room_id: roomId,
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: null
+    });
+    return true;
   }
 
   if (gameMode === 'ai' && currentTurn === 'black') {
@@ -228,14 +282,14 @@ const onDrop = async (sourceSquare, targetSquare) => {
   // Função de desfazer jogada (apenas local, não no backend)
   useImperativeHandle(ref, () => ({
     undoMove: () => {
-      if (game.history().length > 0) {
+      if (game.history().length > 0 && !isMultiplayer) {
         const gameCopy = new Chess(game.fen());
         gameCopy.undo();
         setGame(gameCopy);
         setMessage("Jogada desfeita (apenas localmente)");
         setHint(null);
       } else {
-        setMessage("Nenhuma jogada para desfazer");
+        setMessage(isMultiplayer ? "Não é possível desfazer em modo multiplayer" : "Nenhuma jogada para desfazer");
       }
     },
   }));
@@ -253,14 +307,17 @@ const onDrop = async (sourceSquare, targetSquare) => {
         borderRadius: '5px',
         fontWeight: 'bold'
       }}>
-        {message || `Turno: ${currentTurn === 'white' ? 'Brancas' : 'Pretas'}`}
+        {message || (isMultiplayer 
+          ? `Vez de: ${multiplayerTurn === 'white' ? '⬜ Brancas' : '⬛ Pretas'} | Você é: ${playerColor === 'white' ? '⬜ Brancas' : '⬛ Pretas'}`
+          : `Turno: ${currentTurn === 'white' ? 'Brancas' : 'Pretas'}`
+        )}
       </div>
 
       {/* Tabuleiro */}
       <Chessboard
         position={game.fen()}
         onPieceDrop={onDrop}
-        boardOrientation={boardOrientation}
+        boardOrientation={isMultiplayer ? playerColor : boardOrientation}
         arePiecesDraggable={true}
         animationDuration={150}
         customDarkSquareStyle={currentTheme.dark}
@@ -312,7 +369,11 @@ const onDrop = async (sourceSquare, targetSquare) => {
         fontSize: '0.9rem',
         color: '#666'
       }}>
-        {gameId && <div>ID da Partida: {gameId.substring(0, 8)}...</div>}
+        {isMultiplayer ? (
+          <div>ID da Sala: <strong>{roomId}</strong></div>
+        ) : (
+          gameId && <div>ID da Partida: {gameId.substring(0, 8)}...</div>
+        )}
         <div>Movimentos: {game.history().length}</div>
       </div>
     </div>
