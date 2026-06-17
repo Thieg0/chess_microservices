@@ -1,4 +1,4 @@
-# ♟️ Chess Microservices - Jogo de Xadrez Online
+# Chess Microservices - Jogo de Xadrez Online
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
 ![React](https://img.shields.io/badge/React-18-61DAFB)
@@ -9,32 +9,33 @@ Sistema de jogo de xadrez online desenvolvido com arquitetura de microserviços,
 
 <p align="center">
   <a href="https://chess-microservices.vercel.app">
-    <img src="https://img.shields.io/badge/🎮_JOGAR_AGORA-success?style=for-the-badge" alt="Jogar Agora"/>
+    <img src="https://img.shields.io/badge/JOGAR_AGORA-success?style=for-the-badge" alt="Jogar Agora"/>
   </a>
 </p>
 
-**🌐 SISTEMA EM PRODUÇÃO:** https://chess-microservices.vercel.app
+**SISTEMA EM PRODUÇÃO:** https://chess-microservices.vercel.app
 
 ---
 
-## 📋 Índice
+## Índice
 
-- [Sobre o Projeto](#-sobre-o-projeto)
-- [Arquitetura](#-arquitetura)
-- [Tecnologias](#-tecnologias)
-- [Funcionalidades](#-funcionalidades)
-- [Pré-requisitos](#-pré-requisitos)
-- [Instalação](#-instalação)
-- [Como Usar](#-como-usar)
-- [API Endpoints](#-api-endpoints)
-- [Estrutura do Projeto](#-estrutura-do-projeto)
-- [Testes](#-testes)
-- [Autores](#-autores)
-- [Licença](#-licença)
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Arquitetura](#arquitetura)
+- [Framework](#framework)
+- [Tecnologias](#tecnologias)
+- [Funcionalidades](#funcionalidades)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Como Usar](#como-usar)
+- [API Endpoints](#api-endpoints)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Testes](#testes)
+- [Autores](#autores)
+- [Licença](#licença)
 
 ---
 
-## 🎬 Demonstração em Vídeo
+## Demonstração em Vídeo
 
 <p align="center">
   <a href="https://youtu.be/SmCs-MtwpBM">
@@ -44,27 +45,27 @@ Sistema de jogo de xadrez online desenvolvido com arquitetura de microserviços,
 
 <p align="center">
   <a href="https://youtu.be/SmCs-MtwpBM">
-    <img src="https://img.shields.io/badge/▶️_Assistir_no_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Assistir no YouTube"/>
+    <img src="https://img.shields.io/badge/Assistir_no_YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Assistir no YouTube"/>
   </a>
 </p>
 
 **O que você verá no vídeo:**
-- ✅ Sistema completo funcionando
-- ✅ Demonstração de autenticação
-- ✅ Partidas vs jogador e vs IA
-- ✅ Xeque-mate e validações
+- Sistema completo funcionando
+- Demonstração de autenticação
+- Partidas vs jogador e vs IA
+- Xeque-mate e validações
 
 ---
 
-## 🎯 Sobre o Projeto
+## Sobre o Projeto
 
 Este projeto implementa um jogo de xadrez completo seguindo os princípios de arquitetura de microserviços. O sistema permite que usuários:
 
-- 🔐 Criem contas e façam login com autenticação JWT
-- ♟️ Joguem xadrez contra outro jogador (modo local)
-- 🤖 Joguem contra uma IA baseada no engine Stockfish (3 níveis de dificuldade)
-- 📊 Visualizem histórico de partidas e estatísticas
-- ✅ Tenham todas as regras oficiais do xadrez validadas
+- Criem contas e façam login com autenticação JWT
+- Joguem xadrez contra outro jogador (modo local)
+- Joguem contra uma IA baseada no engine Stockfish (3 níveis de dificuldade)
+- Visualizem histórico de partidas e estatísticas
+- Tenham todas as regras oficiais do xadrez validadas
 
 ### Objetivos Pedagógicos
 
@@ -76,9 +77,10 @@ Este projeto implementa um jogo de xadrez completo seguindo os princípios de ar
 
 ---
 
-## 🏗️ Arquitetura
+## Arquitetura
 
-O sistema é composto por **5 microserviços** independentes que se comunicam via REST API:
+O sistema é composto por **7 microserviços** independentes que se comunicam via REST API:
+
 ```
                     ┌─────────────────┐
                     │   Frontend      │
@@ -100,60 +102,89 @@ O sistema é composto por **5 microserviços** independentes que se comunicam vi
     │   Port 8001  │  │   Port 8003  │  │  Port 8004   │
     └──────────────┘  └──────────────┘  └──────────────┘
                              │
-                             ↓
-                    ┌──────────────────┐
-                    │ History Service  │
-                    │    Port 8005     │
-                    └──────────────────┘
+            ┌────────────────┴────────────────┐
+            ↓                ↓                ↓
+    ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+    │ History Srv  │  │ Recomm. Srv  │  │ Multip. Srv  │
+    │   Port 8005  │  │   Port 8006  │  │   Port 8007  │
+    └──────────────┘  └──────────────┘  └──────────────┘
 ```
+
+### Tabela de Microserviços
+
+| Serviço | Porta | Tecnologias | Armazenamento |
+|---------|-------|-------------|---------------|
+| API Gateway | 8000 | Python/Flask | - |
+| Auth Service | 8001 | Python/Flask | SQLite |
+| Game Service | 8003 | Python/Flask | SQLite |
+| AI Service | 8004 | Python/Flask/Stockfish | - |
+| History Service | 8005 | Python/Flask | SQLite |
+| Recommendation Service | 8006 | Python/Flask | PostgreSQL |
+| Multiplayer Service | 8007 | Python/Flask+SocketIO | Memoria |
 
 ### Microserviços
 
-#### 🚪 **API Gateway (Port 8000)**
+#### API Gateway (Port 8000)
 - Ponto único de entrada
 - Roteamento de requisições
 - Validação de tokens JWT
 - Tratamento de erros
 
-#### 🔐 **Auth Service (Port 8001)**
+#### Auth Service (Port 8001)
 - Registro de usuários
 - Login e autenticação
 - Geração e validação de tokens JWT
 - Criptografia de senhas com bcrypt
 
-#### ♟️ **Game Service (Port 8003)**
+#### Game Service (Port 8003)
 - Lógica do jogo de xadrez
 - Validação de movimentos
 - Detecção de xeque, xeque-mate, empate
 - Gerenciamento de estado do tabuleiro
 - Utiliza biblioteca `python-chess`
 
-#### 🤖 **AI Service (Port 8004)**
+#### AI Service (Port 8004)
 - Implementação do oponente computadorizado
 - Engine Stockfish (ELO 3500+)
 - 3 níveis de dificuldade (Easy, Medium, Hard)
 - Sistema de dicas
 
-#### 📜 **History Service (Port 8005)**
+#### History Service (Port 8005)
 - Armazenamento de histórico de partidas
 - Cálculo de estatísticas
 - Consultas de partidas anteriores
 
+#### Recommendation Service (Port 8006)
+- Sugestão de jogadas baseadas no histórico
+- Análise de partidas anteriores
+
+#### Multiplayer Service (Port 8007)
+- Partidas em tempo real entre jogadores
+- Utiliza WebSockets para comunicação
+
 ---
 
-## 🛠️ Tecnologias
+## Framework
+
+- Ver framework/README.md para documentacao do framework
+
+---
+
+## Tecnologias
 
 ### Backend
 - **Python 3.11+** - Linguagem principal
 - **Flask 3.0** - Framework web
+- **Flask-SocketIO** - Comunicação em tempo real (Multiplayer)
 - **python-chess 1.999** - Validação de regras do xadrez
 - **Stockfish** - Engine de IA
 - **PyJWT 2.8** - Geração de tokens JWT
 - **bcrypt 4.1** - Criptografia de senhas
-- **SQLite3** - Banco de dados
+- **SQLite3 / PostgreSQL** - Banco de dados
 
 ### Frontend
 - **React 18** - Biblioteca UI
+- **socket.io-client** - Cliente para WebSockets
 - **chess.js** - Validação de movimentos no cliente
 - **react-chessboard 4.3** - Componente de tabuleiro
 - **Axios 1.6** - Cliente HTTP
@@ -170,33 +201,33 @@ O sistema é composto por **5 microserviços** independentes que se comunicam vi
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 ### Autenticação
-- ✅ Registro de usuários
-- ✅ Login com JWT
-- ✅ Tokens com expiração de 24h
-- ✅ Senhas criptografadas com bcrypt
+- Registro de usuários
+- Login com JWT
+- Tokens com expiração de 24h
+- Senhas criptografadas com bcrypt
 
 ### Jogo
-- ✅ Modo 2 jogadores local
-- ✅ Modo vs IA (Easy/Medium/Hard)
-- ✅ Validação completa das regras oficiais
-- ✅ Detecção de xeque e xeque-mate
-- ✅ Detecção de empate (afogamento, material insuficiente)
-- ✅ Promoção de peões
-- ✅ Drag and drop intuitivo
-- ✅ Indicadores visuais de status
+- Modo 2 jogadores local
+- Modo vs IA (Easy/Medium/Hard)
+- Validação completa das regras oficiais
+- Detecção de xeque e xeque-mate
+- Detecção de empate (afogamento, material insuficiente)
+- Promoção de peões
+- Drag and drop intuitivo
+- Indicadores visuais de status
 
 ### Histórico
-- ✅ Armazenamento de partidas
-- ✅ Estatísticas de vitórias/derrotas
-- ✅ Taxa de vitória
-- ✅ Consulta de partidas anteriores
+- Armazenamento de partidas
+- Estatísticas de vitórias/derrotas
+- Taxa de vitória
+- Consulta de partidas anteriores
 
 ---
 
-## 📦 Pré-requisitos
+## Pré-requisitos
 
 Antes de começar, você precisa ter instalado:
 
@@ -211,7 +242,7 @@ Antes de começar, você precisa ter instalado:
 
 ---
 
-## 🚀 Instalação
+## Instalação
 
 ### 1. Clone o repositório
 ```bash
@@ -225,10 +256,10 @@ docker-compose up -d
 ```
 
 Isso vai:
-- ✅ Construir as imagens Docker
-- ✅ Iniciar todos os microserviços
-- ✅ Criar a rede interna
-- ✅ Configurar volumes persistentes
+- Construir as imagens Docker
+- Iniciar todos os microserviços
+- Criar a rede interna
+- Configurar volumes persistentes
 
 ### 3. Aguarde os serviços iniciarem
 ```bash
@@ -243,6 +274,8 @@ chess-auth-service      Up
 chess-game-service      Up
 chess-ai-service        Up
 chess-history-service   Up
+chess-recommendation-service Up
+chess-multiplayer-service Up
 chess-frontend          Up
 ```
 
@@ -252,7 +285,7 @@ Abra seu navegador em: **http://localhost:3000**
 
 ---
 
-## 📖 Como Usar
+## Como Usar
 
 ### Primeiro acesso
 
@@ -269,16 +302,16 @@ Abra seu navegador em: **http://localhost:3000**
 
 #### Modo 2 Jogadores Local
 1. Clique em "Novo Jogo"
-2. Selecione "👥 2 Jogadores Local"
+2. Selecione "2 Jogadores Local"
 3. Arraste as peças para movê-las
 4. As brancas começam
 
 #### Modo vs IA
 1. Clique em "Novo Jogo"
 2. Escolha a dificuldade:
-   - 🤖 IA Fácil (profundidade 5)
-   - 🤖 IA Médio (profundidade 10)
-   - 🤖 IA Difícil (profundidade 15)
+   - IA Fácil (profundidade 5)
+   - IA Médio (profundidade 10)
+   - IA Difícil (profundidade 15)
 3. Você joga com as peças brancas
 4. A IA responde automaticamente
 
@@ -290,7 +323,7 @@ Abra seu navegador em: **http://localhost:3000**
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 ### Authentication
 ```http
@@ -415,7 +448,7 @@ Response: 200 OK
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 ```
 chess_microservices/
 ├── api-gateway/
@@ -445,9 +478,19 @@ chess_microservices/
 │   │   ├── Dockerfile
 │   │   └── requirements.txt
 │   │
-│   └── history-service/
-│       ├── app.py          # Rotas de histórico
-│       ├── models.py       # Banco de dados
+│   ├── history-service/
+│   │   ├── app.py          # Rotas de histórico
+│   │   ├── models.py       # Banco de dados
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   │
+│   ├── recommendation-service/
+│   │   ├── app.py
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   │
+│   └── multiplayer-service/
+│       ├── app.py
 │       ├── Dockerfile
 │       └── requirements.txt
 │
@@ -470,7 +513,7 @@ chess_microservices/
 
 ---
 
-## 🧪 Testes
+## Testes
 
 ### Testes Automatizados
 
@@ -480,11 +523,11 @@ Execute o script de testes que valida o fluxo completo:
 ```
 
 O script testa:
-1. ✅ Health check do API Gateway
-2. ✅ Registro de novo usuário
-3. ✅ Login e obtenção de token
-4. ✅ Criação de jogo
-5. ✅ Execução de movimento
+1. Health check do API Gateway
+2. Registro de novo usuário
+3. Login e obtenção de token
+4. Criação de jogo
+5. Execução de movimento
 
 ### Testes Manuais
 
@@ -516,7 +559,7 @@ docker exec chess-ai-service stockfish --version
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problema: Containers não iniciam
 ```bash
@@ -561,7 +604,7 @@ docker-compose up -d
 
 ---
 
-## 🔧 Desenvolvimento
+## Desenvolvimento
 
 ### Rodar sem Docker (desenvolvimento local)
 
@@ -586,22 +629,25 @@ npm start
 
 Crie um arquivo `.env`:
 ```env
-# API URLs (para docker-compose)
-AUTH_SERVICE_URL=http://auth-service:8001
-GAME_SERVICE_URL=http://game-service:8003
-AI_SERVICE_URL=http://ai-service:8004
-HISTORY_SERVICE_URL=http://history-service:8005
+# API URLs
+AUTH_SERVICE_URL=https://chess-auth-service-pzt8.onrender.com
+GAME_SERVICE_URL=https://chess-game-service-mvnr.onrender.com
+AI_SERVICE_URL=https://chess-ai-service-qaen.onrender.com
+HISTORY_SERVICE_URL=https://chess-history-service-mc3l.onrender.com
+RECOMMENDATION_SERVICE_URL=https://chess-recommendation-service.onrender.com
+MULTIPLAYER_SERVICE_URL=https://chess-multiplayer-service.onrender.com
+GATEWAY_URL=https://chess-api-gateway-s4wz.onrender.com
 
 # JWT Secret (MUDAR EM PRODUÇÃO!)
 SECRET_KEY=seu-secret-key-super-secreto
 
 # Frontend
-REACT_APP_API_URL=http://localhost:8000
+REACT_APP_API_URL=https://chess-api-gateway-s4wz.onrender.com
 ```
 
 ---
 
-## 📚 Documentação Adicional
+## Documentação Adicional
 
 - [Arquitetura Detalhada](docs/ARCHITECTURE.md)
 - [API Reference](docs/API.md)
@@ -610,7 +656,7 @@ REACT_APP_API_URL=http://localhost:8000
 
 ---
 
-## 👥 Autores
+## Autores
 
 - **Jayme Vinícius Esteves Pedroza Melo** - [GitHub](https://github.com/jaymevinicius)
 - **Thiego Macena Santos** - [GitHub](https://github.com/Thieg0)
@@ -624,4 +670,3 @@ REACT_APP_API_URL=http://localhost:8000
 **Ano:** 2025.2
 
 ---
-
