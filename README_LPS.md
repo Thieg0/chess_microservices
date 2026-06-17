@@ -1,3 +1,14 @@
+## Autor
+Thiego Macena Santos
+
+## Observacao
+Este modulo foi desenvolvido individualmente
+para as disciplinas de Reuso de Software e
+Topicos em Engenharia de Software (2026).
+O projeto base foi desenvolvido em conjunto
+com Jayme Vinicius na disciplina de
+Engenharia de Software (2025).
+
 # Linha de Produto de Software - Topicos em Engenharia de Software
 
 Documentacao da Linha de Produto de Software (LPS) desenvolvida para a disciplina de Topicos em Engenharia de Software, sob orientacao do Prof. Dr. Arturo Hernandez Dominguez no Instituto de Computacao da UFAL.

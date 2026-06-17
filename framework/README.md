@@ -1,3 +1,14 @@
+## Autor
+Thiego Macena Santos
+
+## Observacao
+Este modulo foi desenvolvido individualmente
+para as disciplinas de Reuso de Software e
+Topicos em Engenharia de Software (2026).
+O projeto base foi desenvolvido em conjunto
+com Jayme Vinicius na disciplina de
+Engenharia de Software (2025).
+
 # FrameworkXadrez - Reuso de Software
 
 Framework desenvolvido para a disciplina de Reuso de Software e Metodologias Ageis, utilizando o padrao de projeto Template Method para promover a extensibilidade e o reuso de componentes de software.
